@@ -16,7 +16,10 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bdc63166-d72e-46d7-8eac-d03f4cd4b13b" name="Default Changelist" comment="Starting Outv3" />
+    <list default="true" id="bdc63166-d72e-46d7-8eac-d03f4cd4b13b" name="Default Changelist" comment="School">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sieve.py" beforeDir="false" afterPath="$PROJECT_DIR$/sieve.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,8 +45,9 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
@@ -165,7 +169,13 @@
       <option name="project" value="LOCAL" />
       <updated>1617143320748</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL−00008" summary="School">
+      <created>1617176959382</created>
+      <option name="number" value="LOCAL−00008" />
+      <option name="presentableId" value="LOCAL−00008" />
+      <updated>1617176959382</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -199,7 +209,8 @@
     <MESSAGE value="Starting Out" />
     <MESSAGE value="Starting Outv2" />
     <MESSAGE value="Starting Outv3" />
-    <option name="LAST_COMMIT_MESSAGE" value="Starting Outv3" />
+    <MESSAGE value="School" />
+    <option name="LAST_COMMIT_MESSAGE" value="School" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
