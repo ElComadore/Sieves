@@ -99,6 +99,7 @@ def diophApprox(alpha, Q):  # don't fucking ask me
 def newSegSieve(n, delta, K):  # segmented sieve with diophantine approx
     SPrime = subSegSieve(n - delta, 2 * delta, K * delta)  # get an approximation of all the primes; some false
     S = []
+    n0 = n - delta
     for j in range(-delta, delta + 1):  # format is rather weird, is just to reflect that the interval is n +- delta
         S.append(SPrime[j + delta])  # mirrors our earlier, perhaps faulty calc
     M = int(np.floor(K * delta)) + 1
@@ -107,8 +108,8 @@ def newSegSieve(n, delta, K):  # segmented sieve with diophantine approx
         R = int(np.floor(M * np.sqrt(delta / (4 * n))))
         m0 = M + R
 
-        a1 = n / (m0 * m0) - np.floor(n / m0 * m0)  # this may be incorrect
-        a0 = n / m0 - np.floor(n / m0)  # as is this one; can possibly get rid of floor
+        a1 = n / (m0 * m0) % 1
+        a0 = n / m0 % 1
         nu = 5 * delta / (4 * M)
 
         aaq = diophApprox(a1, 2 * R)
@@ -130,7 +131,7 @@ def newSegSieve(n, delta, K):  # segmented sieve with diophantine approx
                 if n - delta <= nPrime:
                     if nPrime <= n + delta:
                         if nPrime > m:
-                            S[nPrime - n] = 0  # if in interval and larger than m; kill it!
+                            S[nPrime - n0] = 0  # if in interval and larger than m; kill it!
         M = M + 2 * R + 1  # start point of new M interval; have to make it larger than M + 2R
     return S
 
@@ -194,8 +195,8 @@ def newSegSieveFac(n, delta, K):  # uses the diophantine thing to generate prime
         R = int(np.floor(M * np.sqrt(delta / (4 * n))))
         m0 = M + R
 
-        a1 = n / (m0 * m0)
-        a0 = n / m0
+        a1 = n / (m0 * m0) % 1
+        a0 = n / m0 % 1
         nu = 5 * delta / (4 * M)
 
         aaq = diophApprox(a1, 2 * R)
@@ -219,10 +220,10 @@ def newSegSieveFac(n, delta, K):  # uses the diophantine thing to generate prime
                         if int(nPrime / Pi[nPrime - n0]) % m == 0:  # now finding more prime divisors (I think)
                             if nPrime % (m * m) == 0:
                                 Pi[nPrime - n0] = m * m * Pi[nPrime - n0]
-                                F[nPrime - n].append([m, 2])
+                                F[nPrime - n0].append([m, 2])
                             else:
                                 Pi[nPrime - n0] = m * Pi[nPrime - n0]
-                                F[nPrime - n].append([m, 1])
+                                F[nPrime - n0].append([m, 1])
         M = M + 2 * R + 1  # new interval once again
 
     for nPrime in range(n0, n0 + 2 * delta + 1):  # same meme again
@@ -234,18 +235,39 @@ def newSegSieveFac(n, delta, K):  # uses the diophantine thing to generate prime
 
 # TODO Implement maybe one of those summation estimates? Who knows:)
 
+def mobFun(facList):
+    for factors in facList:
+        if factors[1] > 1:
+            return 0
+    if facList[0][0] == 1:
+        return 1
+    return int(np.power(-1, len(facList) % 2))
+
+
+def mobSumCheck(factorised, bound=0):
+    m = 1
+    max = 1
+    for facList in factorised:
+        m = m + mobFun(facList)
+        if m > max:
+            max = m
+        if (m > bound):
+            print('Holy fuck')
+    print(max)
+    return m
+
+
 n1 = 1000000
-d1 = 500
+d1 = n1 - 2
 m1 = 13
 K1 = 2.5
 
-asdf = newSegSieve(n1, d1, K1)
+# asdf = newSegSieve(n1, d1, K1)
 # asdfasdf = segSieveFac(n1, d1)
 asdfasdfasdf = newSegSieveFac(n1, d1, K1)
+
+m = mobSumCheck(asdfasdfasdf, np.sqrt(n1))
+
 primes = []
 
-for j in range(0, len(asdf)):
-    if asdf[j] == 1:
-        primes.append(j + n1 - d1)
-print(primes)
-print(asdfasdfasdf)
+print(m)
