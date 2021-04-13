@@ -243,9 +243,9 @@ def mobFun(facList):
         return 1
     return int(np.power(-1, len(facList) % 2))
 
-
 def mobSumCheck(factorised, bound=0):
     m = 1
+    ressdf = 1
     max = 1
     for facList in factorised:
         m = m + mobFun(facList)
