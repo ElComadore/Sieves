@@ -20,6 +20,7 @@ def equals(A,B):
 
 
 def compare(A, B, n, printNums=False):
+    from bitarray.util import count_xor
     diff_count = count_xor(A,B)
     if diff_count == 0:
         print("The lists are equal")

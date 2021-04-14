@@ -56,7 +56,7 @@ def subSegSieve(N, delta, M):  # segmented sieve which calls only the primes it 
 
     while MPrime <= M:
         P = simpleSegSieve(MPrime, deltaPrime, int(np.floor(np.sqrt(MPrime + deltaPrime))))  # getting them primes
-        for p in range(MPrime, int(np.minimum(M, MPrime + deltaPrime))):
+        for p in range(MPrime, int(np.minimum(M, MPrime + deltaPrime))+1):
             if P[p - MPrime] == 1:
                 NPrime = int(np.maximum(p * np.ceil(N / p), 2 * p))  # setting n' as multiple of p
                 while NPrime <= N + delta:  # composites in the desired interval
