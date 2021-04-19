@@ -1,4 +1,5 @@
 import numpy as np
+import cProfile
 
 
 def simpleSieve(N):  # Original sieve of Eratosthenes
@@ -233,8 +234,6 @@ def newSegSieveFac(n, delta, K):  # uses the diophantine thing to generate prime
     return F
 
 
-# TODO Implement maybe one of those summation estimates? Who knows:)
-
 def mobFun(facList):
     for factors in facList:
         if factors[1] > 1:
@@ -245,7 +244,6 @@ def mobFun(facList):
 
 def mobSumCheck(factorised, bound=0):
     m = 1
-    ressdf = 1
     max = 1
     for facList in factorised:
         m = m + mobFun(facList)
@@ -257,17 +255,22 @@ def mobSumCheck(factorised, bound=0):
     return m
 
 
-n1 = 1000000
+n1 = 5000000
 d1 = n1 - 2
 m1 = 13
 K1 = 2.5
 
-# asdf = newSegSieve(n1, d1, K1)
-# asdfasdf = segSieveFac(n1, d1)
-asdfasdfasdf = newSegSieveFac(n1, d1, K1)
+pr = cProfile.Profile()
+pr.enable()
+asdf = newSegSieve(n1, d1, K1)
+pr.disable()
+print(np.sum(asdf))
+pr.print_stats()
 
-m = mobSumCheck(asdfasdfasdf, np.sqrt(n1))
+# asdfasdf = segSieveFac(n1, d1)
+# asdfasdfasdf = newSegSieveFac(n1, d1, K1)
+
 
 primes = []
 
-print(m)
+print()

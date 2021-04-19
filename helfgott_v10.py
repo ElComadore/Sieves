@@ -216,7 +216,7 @@ def main():  # Main function that runs when file is run as script
     S = NewSegSiev(_args['n'],_args['Delta'],_args['K'])  # Sieve
     pr.disable()
     print('Found '+str(countNums(S))+' primes!\ncProfile:')   # Print n.o. primes found
-    writeout(pr,S) # Write to files
+    writeout(pr,S)  # Write to files
     return
 
 

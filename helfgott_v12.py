@@ -1,6 +1,6 @@
 from bitarray import bitarray
 from bitarray.util import zeros
-from math import sqrt, floor, isqrt
+from math import sqrt, floor
 
 
 # ______Evaluation functions______#
@@ -55,7 +55,7 @@ def DiophAppr(alpha, Q):
     s = 1
     while q <= Q:
         if alpha == b:
-            return (p, -s * q_m, q)
+            return p, -s * q_m, q
         alpha = 1 / (alpha - b)
         b = floor(alpha)
         p_p, q_p = b * p + p_m, b * q + q_m
@@ -70,7 +70,7 @@ def SimpleSiev(N):
     P[2] = True  # Set 2 to True
     P[3::2] = True  # Set odd numbers >1 to True
 
-    for num in range(3, isqrt(N) + 1, 2):
+    for num in range(3, int(sqrt(N)) + 1, 2):
         if P[num]:
             P[num * num::2 * num] = False
     return P
@@ -92,11 +92,26 @@ def SubSegSiev(n, Delta, M):
     S.setall(True)
     S[0:2 - n] = False  # Set numbers 0 and 1 to false if present
 
-    D_s = isqrt(M)  # Size of each segment (-1)
+    D_s = int(sqrt(M))  # Size of each segment (-1)
     for M_s in range(1, M + 1, D_s + 1):  # Iterate through segments
-        Primes = SimpleSegSiev(M_s, D_s, isqrt(M_s + D_s))  # Get primes in segment
-        # Primes = SimpleSegSiev(M_s, min(M-M_s, D_s), isqrt(M_s+D_s))  # Get primes in segment
+        Primes = SimpleSegSiev(M_s, D_s, int(sqrt(M_s + D_s)))  # Get primes in segment
+        # Primes = SimpleSegSiev(M_s, min(M-M_s, D_s), int(sqrt((M_s+D_s))  # Get primes in segment
         for p in Primes.itersearch(bitarray('1')):
+            p = p + M_s
+            S[max(-(n // -p), 2) * p - n::p] = False
+    return S
+
+
+def SegSieveList(n, Delta):
+    M = int(sqrt(n + Delta))
+    S = zeros(Delta + 1)
+    S.setall(True)
+    if n <= 2:
+        S[0:2 - n] = False
+    D_s = int(sqrt(M))
+    L = readInPrimes("primes1BILL", M+1)
+    for M_s in range(1, M + 1, D_s + 1):
+        for p in L[M_s:M_s + D_s].itersearch(bitarray('1')):
             p = p + M_s
             S[max(-(n // -p), 2) * p - n::p] = False
     return S
@@ -127,8 +142,7 @@ def NewSegSiev(n, Delta, K):
         bound2 = M + 2 * R + 1
         for j in range(-k - 1, k + 2):
             r0 = -ainv * (c + j) % q
-            for m in range(m0 + r0 - ((m0 + r0 - M) // q) * q, bound2,
-                           q):  # iterating through elements in the intersection
+            for m in range(m0 + r0 - ((m0 + r0 - M) // q) * q, bound2, q):  # iterating through elements in the intersection
                 n_s = (upper // m) * m
                 if n_s >= lower and n_s > m:  # The first criterion is less common than the second
                     S[n_s - lower] = False
@@ -150,6 +164,33 @@ def intervalSieve(numInts, length):
         del S
 
 
+def plotPrimes(S):
+    import matplotlib.pyplot as plt
+    import numpy as np
+    if len(S) > 10000:
+        intLength = len(S)//10000
+    else:
+        intLength = 1
+    pi = []
+    points = []
+    pi.append(S[0:10].count())
+    points.append(10)
+    for i in range(10 + intLength, intLength*10000, intLength):
+        pi.append(S[i:i+intLength].count() + pi[-1])
+        points.append(i)
+    fig, ax = plt.subplots()  # Create a figure containing a single axes.
+    ax.plot(points, pi, label = "sieve")  # Plot some data on the axes.
+    x = np.linspace(10, intLength*10000, 10000)
+    ax.plot(x, np.divide(x, np.log(x)), label = "x/log(x)")  # Plot some data on the axes.
+    ax.set_xlabel('x')  # Add an x-label to the axes.
+    ax.set_ylabel('f(x)')  # Add a y-label to the axes.
+    ax.set_title("Prime Counter vs. PNT")  # Add a title to the axes.
+    ax.legend()  # Add a legend.
+    plt.show()
+    print(pi[-1])
+    wait = input("Press Enter to continue.")
+
+
 def createPrimeList(primeArray, name):
     bits_per_line = 100
     with open(name, 'w') as f:
@@ -158,11 +199,13 @@ def createPrimeList(primeArray, name):
             f.write('\n' + primeArray[i:i + bits_per_line].to01())
 
 
-def readInPrimes(primeList = False):
+def readInPrimes(primeList = False, chars = False):
     if not primeList:
         primeList = "primes_in_bits"
     f = open(primeList, "rt")
-    return bitarray(f.read())
+    if not chars:
+        return bitarray(f.read())
+    return bitarray(f.read(chars))
 
 
 def appendPrimeList(primeArray, name):
@@ -246,15 +289,20 @@ def main():  # Main function that runs when file is run as script
     import cProfile
     conf()  # Handle config
     print(info())  # Print info about the sieving to be done
-    with cProfile.Profile() as pr:  # Checks function calls and times
-        # intervalSieve(11, 50000000)
-        # S = readInPrimes("intPrim")  # Sieve
-        S = NewSegSiev(_args['n'],_args['Delta'], _args['K'])
+    pr = cProfile.Profile()
+    pr.enable()
+    S = bitarray()
+    plotPrimes(readInPrimes("primes1BILL"))
+    # intervalSieve(11, 50000000)
+    # S = readInPrimes("intPrim")  # Sieve
+    # S = SegSieveList(0, 2*_args['n'])
+    pr.disable()
     print(len(S))
     print('Found ' + str(countNums(S)) + ' primes!\ncProfile:')  # Print n.o. primes found
 
     # print(getNums(S, _args['n'] - _args['Delta']))
     writeout(pr, S)  # Write to files
+
     return
 
 
